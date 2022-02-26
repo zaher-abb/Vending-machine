@@ -15,14 +15,14 @@ public class VendingMachineTest {
 
     @Test
     public void shouldReturnProduct() throws Exception {
-        Product product = vendingMachine.returnProduct(Product.PASTA, COINS);
-        Assertions.assertNotNull(product);
+        Output productCoin = vendingMachine.returnProduct(Product.PASTA, COINS);
+        Assertions.assertNotNull(productCoin.getProduct());
     }
 
     @Test
     public void shouldReturnRequestedProduct() throws Exception {
-        Product product = vendingMachine.returnProduct(Product.PASTA, COINS);
-        assertEquals(Product.PASTA, product);
+        Output productCoin = vendingMachine.returnProduct(Product.PASTA, COINS);
+        assertEquals(Product.PASTA, productCoin.getProduct());
     }
 
     @Test
@@ -31,13 +31,13 @@ public class VendingMachineTest {
          * assertThrows should be a not found Product to throw the Exception
          *
          * */
-        assertThrows(Exception.class, () -> vendingMachine.returnProduct(Product.SODA, COINS));
+        assertThrows(VendingMachineException.class, () -> vendingMachine.returnProduct(Product.SODA, COINS));
     }
 
     @Test
     public void shouldDeductProductFromInventory() throws Exception {
-        Product product = vendingMachine.returnProduct(Product.PASTA, COINS);
-        assertEquals(4, vendingMachine.inventory.get(product));
+        Output productCoin = vendingMachine.returnProduct(Product.PASTA, COINS);
+        assertEquals(4, vendingMachine.inventory.get(productCoin.getProduct()));
     }
 
     @Test
@@ -48,15 +48,23 @@ public class VendingMachineTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenInsufficientFunds() throws Exception {
-        assertThrows(Exception.class, () -> {
+    public void shouldThrowExceptionWhenInsufficientFunds() {
+        assertThrows(VendingMachineException.class, () -> {
             vendingMachine.returnProduct(Product.SPARKLING_WATER, COINS);
         });
     }
 
     @Test
-    public void shouldReturnTheChange() throws Exception {
-        vendingMachine.returnProduct(Product.PASTA, COINS);
-        assertEquals(10,vendingMachine.returnTheChange(Product.PASTA.getPrice(), COINS));
+    public void shouldReturn25() throws Exception {
+        Output productCoin = vendingMachine.returnProduct(Product.PASTA,
+                List.of(Coin.FIVE, Coin.TWENTY_FIVE, Coin.TEN));
+        assertEquals(List.of(Coin.TWENTY_FIVE), productCoin.getCoin());
+    }
+
+    @Test
+    public void shouldReturn() throws Exception {
+        Output productCoin = vendingMachine.returnProduct(Product.PASTA,
+                List.of(Coin.FIVE, Coin.TEN, Coin.TEN, Coin.TEN));
+        assertEquals(List.of(Coin.TEN, Coin.FIVE, Coin.FIVE), productCoin.getCoin());
     }
 }

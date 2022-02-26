@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Coin {
-    ONE(1),
-    FIVE(5),
+    TWENTY_FIVE(25),
     TEN(10),
-    TWENTY_FIVE(25);
+    FIVE(5),
+    ONE(1);
 
     private final double value;
 }
